@@ -48,16 +48,17 @@ const assets = {
 World.create(document.getElementById('scene-container'), {
   assets,
   xr: {
-    sessionMode: SessionMode.ImmersiveVR,
+    sessionMode: SessionMode.ImmersiveAR,
     offer: 'always',
     // Optional structured features; layers/local-floor are offered by default
-    features: { handTracking: true, layers: false } 
+    features: { handTracking: false, layers: false, localFloor: true } 
   },
   features: {grabbing: true},
-  level: '/glxf/Composition.glxf' 
+  //level: '/glxf/Composition.glxf' 
 }).then((world) => {
   const { camera } = world;
   
+
 
   const bin = AssetManager.getGLTF('paperbin').scene;
   bin.position.set(-2, .5, -3);
@@ -65,11 +66,11 @@ World.create(document.getElementById('scene-container'), {
   const binEntity = world.createTransformEntity(bin);
   binEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.TriMesh,  density: 0.02,  friction: 0.5,  restitution: 0.9 });
   binEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
-  binEntity.addComponent(Interactable).addComponent(OneHandGrabbable);
+ 
 
 
 
-  // Create a green sphere
+  // Create bin
 
   const sphere = AssetManager.getGLTF('paperball').scene;
   sphere.position.set(1, 1.5, -3);
@@ -93,15 +94,7 @@ World.create(document.getElementById('scene-container'), {
           //console.log(`Sphere has bounced ${numBounces} times`);
           //sphereEntity.destroy()
       }
-      const leftCtrl = world.input.gamepads.left
-      if (leftCtrl?.gamepad.buttons[5].pressed) {
-          console.log('y button pressed!');
-          
-      }
-      const rightCtrl = world.input.gamepads.right
-      if (rightCtrl?.gamepad.buttons[5].pressed) {
-          console.log('b button pressed!');
-      }
+     
 
 
       requestAnimationFrame(gameLoop);
@@ -151,4 +144,11 @@ World.create(document.getElementById('scene-container'), {
       return false;
     }
   }
+
+
+
+
+
+
+
 });
