@@ -14,6 +14,7 @@ import {
   LocomotionEnvironment,
   EnvironmentType,
   PanelUI,
+  Vector3,
   Interactable,
   ScreenSpace,
   OneHandGrabbable, DistanceGrabbable,
@@ -61,8 +62,8 @@ World.create(document.getElementById('scene-container'), {
 
 
   const bin = AssetManager.getGLTF('paperbin').scene;
-  bin.position.set(-2, .5, -3);
-  bin.scale.set(0.01, 0.01, 0.01);
+  bin.position.set(-.25, .28, -1);
+  bin.scale.set(0.007, 0.007, 0.007);
   const binEntity = world.createTransformEntity(bin);
   binEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.TriMesh,  density: 0.02,  friction: 0.5,  restitution: 0.9 });
   binEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
@@ -73,18 +74,28 @@ World.create(document.getElementById('scene-container'), {
   // Create bin
 
   const sphere = AssetManager.getGLTF('paperball').scene;
-  sphere.position.set(1, 1.5, -3);
+  sphere.position.set(.25, 1.5, -1);
   const sphereEntity = world.createTransformEntity(sphere);
   sphereEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto,  density: 0.2,  friction: 0.5,  restitution: 0.9 });
   sphereEntity.addComponent(PhysicsBody, { state: PhysicsState.Dynamic });
+  sphereEntity.addComponent(Interactable).addComponent(OneHandGrabbable);
 
-  // create a floor
-  const floorMesh = new Mesh(new PlaneGeometry(20, 20), new MeshStandardMaterial({color:"tan"}));
+  sphereEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.LOCAL_FLOOR });
+  
+  const floorGeometry = new PlaneGeometry(20, 20);
+  const floorMaterial = new MeshStandardMaterial({
+    color: 0xaaaaaa,       // base color (won't matter once opacity=0)
+    transparent: true,     // allow transparency
+    opacity: .1,            // fully invisible
+  });
+  const floorMesh = new Mesh(floorGeometry, floorMaterial);
   floorMesh.rotation.x = -Math.PI / 2;
   const floorEntity = world.createTransformEntity(floorMesh);
   floorEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.STATIC });
   floorEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto});
   floorEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
+  
+
 
   let numBounces = 0;
   function gameLoop() {
