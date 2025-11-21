@@ -16,6 +16,7 @@ import {
   PanelUI,
   Interactable,
   ScreenSpace,
+  OneHandGrabbable, DistanceGrabbable,
   PhysicsBody, PhysicsShape, PhysicsShapeType, PhysicsState, PhysicsSystem
 } from '@iwsdk/core';
 
@@ -30,6 +31,18 @@ const assets = {
     priority: 'background'
   },
 
+  paperball: {                              
+    url: '/glxf/paperball.glb',
+    type: AssetType.GLTF,
+    priority: 'critical',
+  },
+
+  paperbin: {                              
+    url: '/glxf/paper_waste_bin.glb',
+    type: AssetType.GLTF,
+    priority: 'critical',
+  },
+
 };
 
 World.create(document.getElementById('scene-container'), {
@@ -40,15 +53,25 @@ World.create(document.getElementById('scene-container'), {
     // Optional structured features; layers/local-floor are offered by default
     features: { handTracking: true, layers: false } 
   },
-  features: { locomotion: { useWorker: true }, grabbing: true, physics: true},
+  features: {grabbing: true},
   level: '/glxf/Composition.glxf' 
 }).then((world) => {
   const { camera } = world;
   
+
+  const bin = AssetManager.getGLTF('paperbin').scene;
+  bin.position.set(-2, .5, -3);
+  bin.scale.set(0.01, 0.01, 0.01);
+  const binEntity = world.createTransformEntity(bin);
+  binEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.TriMesh,  density: 0.02,  friction: 0.5,  restitution: 0.9 });
+  binEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
+  binEntity.addComponent(Interactable).addComponent(OneHandGrabbable);
+
+
+
   // Create a green sphere
-  const sphereGeometry = new SphereGeometry(0.25, 32, 32);
-  const greenMaterial = new MeshStandardMaterial({ color: "red" });
-  const sphere = new Mesh(sphereGeometry, greenMaterial);
+
+  const sphere = AssetManager.getGLTF('paperball').scene;
   sphere.position.set(1, 1.5, -3);
   const sphereEntity = world.createTransformEntity(sphere);
   sphereEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto,  density: 0.2,  friction: 0.5,  restitution: 0.9 });
@@ -67,9 +90,20 @@ World.create(document.getElementById('scene-container'), {
       //console.log(sphereEntity.object3D.position.y);
       if (sphereEntity.object3D.position.y < 0.27) {
           numBounces += 1;
-          console.log(`Sphere has bounced ${numBounces} times`);
+          //console.log(`Sphere has bounced ${numBounces} times`);
           //sphereEntity.destroy()
       }
+      const leftCtrl = world.input.gamepads.left
+      if (leftCtrl?.gamepad.buttons[5].pressed) {
+          console.log('y button pressed!');
+          
+      }
+      const rightCtrl = world.input.gamepads.right
+      if (rightCtrl?.gamepad.buttons[5].pressed) {
+          console.log('b button pressed!');
+      }
+
+
       requestAnimationFrame(gameLoop);
     }
   gameLoop();
