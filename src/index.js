@@ -103,26 +103,30 @@ World.create(document.getElementById('scene-container'), {
 
 
 
+
+
+  /////////////////////////adding an indicator cube
+  const cubeGeometry = new BoxGeometry(0.5, 0.5, 0.5);
+  const cubeMaterial = new MeshStandardMaterial({ color: 'red' });
+  const cubeMesh = new Mesh(cubeGeometry, cubeMaterial);
+  cubeMesh.position.set(0, 1.5, -2);
+  const cubeEntity = world.createTransformEntity(cubeMesh);
+
+
   let numBounces = 0;
   function gameLoop() {
-    console.log(sphereEntity.object3D.position.y);
-    if (sphereEntity.object3D.position.y < 0.27) {
-        //numBounces += 1;
+    //console.log(sphereEntity.object3D.position.y);
+    if (sphereEntity.object3D.position.y > 2) {
+      cubeMesh.material.color.set('green');  
+      //numBounces += 1;
         //console.log(`Sphere has bounced ${numBounces} times`);
         //sphereEntity.destroy()
       }
-    const leftCtrl = world.input.gamepads.left
-    if (leftCtrl?.gamepad.buttons[5].pressed) {
-        console.log('y button pressed!');
-        // do something like spawn a new object
-        sphereEntity.destroy()
-          
-    }
-    const rightCtrl = world.input.gamepads.right
-    if (rightCtrl?.gamepad.buttons[5].pressed) {
-        console.log('b button pressed!');
-        // do something like spawn a new object
-    }
+
+    //if (sphereEntity.object3D.position.z < -3){
+      //cubeMesh.material.color.set('green');
+    //}
+    
      
 
 
