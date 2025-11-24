@@ -80,7 +80,8 @@ World.create(document.getElementById('scene-container'), {
   const floorGeometry = new BoxGeometry(20, 2, 20);
   const floorMaterial = new MeshStandardMaterial({
     color: 0xaaaaaa,       // base color (won't matter once opacity=0)
-               // fully invisible
+    transparent: true,     // allow transparency
+    opacity: .1,            // fully invisible
   });
   const floorMesh = new Mesh(floorGeometry, floorMaterial);
   floorMesh.position.set(0,-1,0)
