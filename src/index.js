@@ -1,10 +1,9 @@
-
-
 import {
   AssetType,
   Mesh,
   MeshBasicMaterial,
   PlaneGeometry,
+  BoxGeometry,
   SessionMode,
   SRGBColorSpace,
   AssetManager,
@@ -59,6 +58,9 @@ World.create(document.getElementById('scene-container'), {
 }).then((world) => {
   const { camera } = world;
   
+  world.registerSystem(PhysicsSystem).registerComponent(PhysicsBody).registerComponent(PhysicsShape);
+  
+
 
 
   const bin = AssetManager.getGLTF('paperbin').scene;
@@ -73,6 +75,22 @@ World.create(document.getElementById('scene-container'), {
 
   // Create bin
 
+
+  
+  const floorGeometry = new BoxGeometry(20, 2, 20);
+  const floorMaterial = new MeshStandardMaterial({
+    color: 0xaaaaaa,       // base color (won't matter once opacity=0)
+               // fully invisible
+  });
+  const floorMesh = new Mesh(floorGeometry, floorMaterial);
+  floorMesh.position.set(0,-1,0)
+  const floorEntity = world.createTransformEntity(floorMesh);
+  floorEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.STATIC });
+  floorEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto});
+  floorEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
+
+  
+
   const sphere = AssetManager.getGLTF('paperball').scene;
   sphere.position.set(.25, 1.5, -1);
   const sphereEntity = world.createTransformEntity(sphere);
@@ -81,27 +99,14 @@ World.create(document.getElementById('scene-container'), {
   sphereEntity.addComponent(Interactable).addComponent(OneHandGrabbable);
 
   sphereEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.LOCAL_FLOOR });
-  
-  const floorGeometry = new PlaneGeometry(20, 20);
-  const floorMaterial = new MeshStandardMaterial({
-    color: 0xaaaaaa,       // base color (won't matter once opacity=0)
-    transparent: true,     // allow transparency
-    opacity: .1,            // fully invisible
-  });
-  const floorMesh = new Mesh(floorGeometry, floorMaterial);
-  floorMesh.rotation.x = -Math.PI / 2;
-  const floorEntity = world.createTransformEntity(floorMesh);
-  floorEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.STATIC });
-  floorEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto});
-  floorEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
-  
+
 
 
   let numBounces = 0;
   function gameLoop() {
-      //console.log(sphereEntity.object3D.position.y);
+      console.log(sphereEntity.object3D.position.y);
       if (sphereEntity.object3D.position.y < 0.27) {
-          numBounces += 1;
+          //numBounces += 1;
           //console.log(`Sphere has bounced ${numBounces} times`);
           //sphereEntity.destroy()
       }
@@ -113,8 +118,6 @@ World.create(document.getElementById('scene-container'), {
   gameLoop();
 
 
-  
-  world.registerSystem(PhysicsSystem).registerComponent(PhysicsBody).registerComponent(PhysicsShape);
   
 
 
