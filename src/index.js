@@ -64,10 +64,10 @@ World.create(document.getElementById('scene-container'), {
 
 
   const bin = AssetManager.getGLTF('paperbin').scene;
-  bin.position.set(-.25, .28, -1);
+  bin.position.set(-.25, .24, -1);
   bin.scale.set(0.007, 0.007, 0.007);
   const binEntity = world.createTransformEntity(bin);
-  binEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.TriMesh,  density: 0.02,  friction: 0.5,  restitution: 0.9 });
+  binEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.TriMesh,  density: 0.02,  friction: 0.5,  restitution: 0.3 });
   binEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
  
 
@@ -86,7 +86,7 @@ World.create(document.getElementById('scene-container'), {
   const floorMesh = new Mesh(floorGeometry, floorMaterial);
   floorMesh.position.set(0,-1,0)
   const floorEntity = world.createTransformEntity(floorMesh);
-  floorEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.STATIC });
+  //floorEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.STATIC });
   floorEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto});
   floorEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
 
@@ -95,7 +95,7 @@ World.create(document.getElementById('scene-container'), {
   const sphere = AssetManager.getGLTF('paperball').scene;
   sphere.position.set(.25, 1.5, -1);
   const sphereEntity = world.createTransformEntity(sphere);
-  sphereEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto,  density: 0.2,  friction: 0.5,  restitution: 0.9 });
+  sphereEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Sphere, dimensions: [0.05, 0, 0],  density: 0.2,  friction: 0.7,  restitution: 0.3 });
   sphereEntity.addComponent(PhysicsBody, { state: PhysicsState.Dynamic });
   sphereEntity.addComponent(Interactable).addComponent(OneHandGrabbable);
 
@@ -105,16 +105,28 @@ World.create(document.getElementById('scene-container'), {
 
   let numBounces = 0;
   function gameLoop() {
-      console.log(sphereEntity.object3D.position.y);
-      if (sphereEntity.object3D.position.y < 0.27) {
-          //numBounces += 1;
-          //console.log(`Sphere has bounced ${numBounces} times`);
-          //sphereEntity.destroy()
+    console.log(sphereEntity.object3D.position.y);
+    if (sphereEntity.object3D.position.y < 0.27) {
+        //numBounces += 1;
+        //console.log(`Sphere has bounced ${numBounces} times`);
+        //sphereEntity.destroy()
       }
+    const leftCtrl = world.input.gamepads.left
+    if (leftCtrl?.gamepad.buttons[5].pressed) {
+        console.log('y button pressed!');
+        // do something like spawn a new object
+        sphereEntity.destroy()
+          
+    }
+    const rightCtrl = world.input.gamepads.right
+    if (rightCtrl?.gamepad.buttons[5].pressed) {
+        console.log('b button pressed!');
+        // do something like spawn a new object
+    }
      
 
 
-      requestAnimationFrame(gameLoop);
+    requestAnimationFrame(gameLoop);
     }
   gameLoop();
 
