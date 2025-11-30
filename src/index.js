@@ -81,7 +81,7 @@ World.create(document.getElementById('scene-container'), {
   const floorMaterial = new MeshStandardMaterial({
     color: 0xaaaaaa,       // base color (won't matter once opacity=0)
     transparent: true,     // allow transparency
-    opacity: 1,            // fully invisible
+    opacity: .1,            // fully invisible
   });
   const floorMesh = new Mesh(floorGeometry, floorMaterial);
   floorMesh.position.set(0,-1,0)
