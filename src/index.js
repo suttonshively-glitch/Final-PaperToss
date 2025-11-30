@@ -53,7 +53,7 @@ World.create(document.getElementById('scene-container'), {
     // Optional structured features; layers/local-floor are offered by default
     features: { handTracking: false, layers: false, localFloor: true } 
   },
-  features: {grabbing: true},
+  features: {grabbing: true, locomotion: true,},
   //level: '/glxf/Composition.glxf' 
 }).then((world) => {
   const { camera } = world;
@@ -81,23 +81,23 @@ World.create(document.getElementById('scene-container'), {
   const floorMaterial = new MeshStandardMaterial({
     color: 0xaaaaaa,       // base color (won't matter once opacity=0)
     transparent: true,     // allow transparency
-    opacity: .1,            // fully invisible
+    opacity: 1,            // fully invisible
   });
   const floorMesh = new Mesh(floorGeometry, floorMaterial);
   floorMesh.position.set(0,-1,0)
   const floorEntity = world.createTransformEntity(floorMesh);
-  //floorEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.STATIC });
+  floorEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.STATIC });
   floorEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto});
   floorEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
 
   
 
   const sphere = AssetManager.getGLTF('paperball').scene;
-  sphere.position.set(.25, 1.5, -1);
+  sphere.position.set(.25, 50, -1);
   const sphereEntity = world.createTransformEntity(sphere);
   sphereEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Sphere, dimensions: [0.05, 0, 0],  density: 0.2,  friction: 0.7,  restitution: 0.3 });
   sphereEntity.addComponent(PhysicsBody, { state: PhysicsState.Dynamic });
-  sphereEntity.addComponent(Interactable).addComponent(OneHandGrabbable);
+  sphereEntity.addComponent(Interactable).addComponent(DistanceGrabbable);
 
   sphereEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.LOCAL_FLOOR });
 
@@ -116,12 +116,12 @@ World.create(document.getElementById('scene-container'), {
   let numBounces = 0;
   function gameLoop() {
     //console.log(sphereEntity.object3D.position.y);
-    if (sphereEntity.object3D.position.y > 2) {
+    if (sphereEntity.object3D.position.y < 2) {
       cubeMesh.material.color.set('green');  
       //numBounces += 1;
         //console.log(`Sphere has bounced ${numBounces} times`);
         //sphereEntity.destroy()
-      }
+    }
 
     //if (sphereEntity.object3D.position.z < -3){
       //cubeMesh.material.color.set('green');
