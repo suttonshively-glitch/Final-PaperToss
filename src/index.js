@@ -115,7 +115,7 @@ World.create(document.getElementById('scene-container'), {
 
   let numBounces = 0;
   function gameLoop() {
-    console.log(sphereEntity.object3D.position.y);
+    //console.log(sphereEntity.object3D.position.y);
     if (
     sphereEntity.object3D.position.y < .11 &&
     sphereEntity.object3D.position.x > -.35 &&
