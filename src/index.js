@@ -115,8 +115,13 @@ World.create(document.getElementById('scene-container'), {
 
   let numBounces = 0;
   function gameLoop() {
-    //console.log(sphereEntity.object3D.position.y);
-    if (sphereEntity.object3D.position.y < 2) {
+    console.log(sphereEntity.object3D.position.y);
+    if (
+    sphereEntity.object3D.position.y < .11 &&
+    sphereEntity.object3D.position.x > -.35 &&
+    sphereEntity.object3D.position.x < -.15 &&
+    sphereEntity.object3D.position.z > -1.1 &&
+    sphereEntity.object3D.position.z < -.9) {
       cubeMesh.material.color.set('green');  
       //numBounces += 1;
         //console.log(`Sphere has bounced ${numBounces} times`);
