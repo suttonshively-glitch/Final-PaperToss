@@ -93,7 +93,7 @@ World.create(document.getElementById('scene-container'), {
   
 
   const sphere = AssetManager.getGLTF('paperball').scene;
-  sphere.position.set(.25, 50, -1);
+  sphere.position.set(.25, 2, -1);
   const sphereEntity = world.createTransformEntity(sphere);
   sphereEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Sphere, dimensions: [0.05, 0, 0],  density: 0.2,  friction: 0.7,  restitution: 0.3 });
   sphereEntity.addComponent(PhysicsBody, { state: PhysicsState.Dynamic });
@@ -123,18 +123,9 @@ World.create(document.getElementById('scene-container'), {
     sphereEntity.object3D.position.z > -1.1 &&
     sphereEntity.object3D.position.z < -.9) {
       cubeMesh.material.color.set('green');  
-      //numBounces += 1;
-        //console.log(`Sphere has bounced ${numBounces} times`);
-        //sphereEntity.destroy()
+      sphereEntity.destroy()
     }
-
-    //if (sphereEntity.object3D.position.z < -3){
-      //cubeMesh.material.color.set('green');
-    //}
     
-     
-
-
     requestAnimationFrame(gameLoop);
     }
   gameLoop();
