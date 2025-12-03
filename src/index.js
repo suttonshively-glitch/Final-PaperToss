@@ -57,7 +57,7 @@ World.create(document.getElementById('scene-container'), {
     // Optional structured features; layers/local-floor are offered by default
     features: { handTracking: false, layers: false, localFloor: true } 
   },
-  features: {grabbing: true, locomotion: true,},
+  features: {grabbing: true, locomotion: false,},
   //level: '/glxf/Composition.glxf' 
 }).then((world) => {
   const { camera } = world;
@@ -84,7 +84,7 @@ World.create(document.getElementById('scene-container'), {
   const floorMesh = new Mesh(floorGeometry, floorMaterial);
   floorMesh.position.set(0,-1,0)
   const floorEntity = world.createTransformEntity(floorMesh);
-  floorEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.STATIC });
+  //floorEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.STATIC });
   floorEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto});
   floorEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
 
