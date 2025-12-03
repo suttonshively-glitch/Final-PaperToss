@@ -125,8 +125,14 @@ World.create(document.getElementById('scene-container'), {
   });
   sphereEntity.object3D.add(papersoundEntity.object3D); // Attach sound to movingEntity
 
+  sphere.addEventListener('pointerdown', (event) => {
+    AudioUtils.play(papersoundEntity);
+    // 'event.data.pointerId' can help identify which hand caused the event
+  });
 
 
+
+ //////////////////////////////////////////game loop
   let sphereExists = true;
 
   const GameLoopSystem = class extends createSystem() {
@@ -145,7 +151,6 @@ World.create(document.getElementById('scene-container'), {
         }
 
       }
-      
       
     }
   };
