@@ -75,7 +75,7 @@ World.create(document.getElementById('scene-container'), {
  
 
   /////////////mostly invis floor
-  const floorGeometry = new BoxGeometry(60, 2, 60);
+  const floorGeometry = new BoxGeometry(10, 2, 10);
   const floorMaterial = new MeshStandardMaterial({
     color: 0xaaaaaa,       // base color (won't matter once opacity=0)
     transparent: true,     // allow transparency
@@ -104,8 +104,8 @@ World.create(document.getElementById('scene-container'), {
   const cubeGeometry = new BoxGeometry(0.5, 0.5, 0.5);
   const cubeMaterial = new MeshStandardMaterial({ color: 'red' });
   const cubeMesh = new Mesh(cubeGeometry, cubeMaterial);
-  cubeMesh.position.set(0, 2, -2);
-  //const cubeEntity = world.createTransformEntity(cubeMesh);
+  cubeMesh.position.set(0, 5, -2);
+  const cubeEntity = world.createTransformEntity(cubeMesh);
 
   //scoreboard
   // create a message board using a canvas texture (scoreBox)
@@ -198,16 +198,22 @@ World.create(document.getElementById('scene-container'), {
       sphereEntity.object3D.position.x < .1 &&
       sphereEntity.object3D.position.z > -2.1 &&
       sphereEntity.object3D.position.z < -1.9) {
-        cubeMesh.material.color.set('green'); 
+         
         AudioUtils.play(musicEntity); 
-        sphereEntity.destroy()
+        //sphereEntity.destroy()
         sphereExists = false;
         score += 1
         updateScoreboard();
       
         }
-        if(sphereEntity.object3D.position.z > 5){
-          
+        if(sphereEntity.object3D.position.z < -3 ||
+          sphereEntity.object3D.position.z > 3 ||
+          sphereEntity.object3D.position.x < -3 ||
+          sphereEntity.object3D.position.x > 3 ||
+          sphereEntity.object3D.position.y < -1
+        ){
+          cubeMesh.material.color.set('green');
+          sphereEntity.object3D.position.set(0, .5, -.5);
         }
 
       }
