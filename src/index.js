@@ -1,6 +1,7 @@
 import {
   AssetType,
   createSystem,
+  AudioSource, AudioUtils,
   Mesh,
   MeshBasicMaterial,
   PlaneGeometry,
@@ -113,9 +114,37 @@ World.create(document.getElementById('scene-container'), {
   cubeMesh.position.set(0, 1.5, -2);
   const cubeEntity = world.createTransformEntity(cubeMesh);
 
+
+  const musicEntity = world.createEntity();
+  musicEntity.addComponent(AudioSource, {
+  src: '/audio/marimba-win-b-3-209679.mp3',
+  loop: false,
+  volume: 1, 
+  positional: false
+  });
+
+
+  const papersoundEntity = world.createTransformEntity();
+  papersoundEntity.object3D.position.set(.25, 2, -1);
+  papersoundEntity.addComponent(AudioSource, {
+  src: '/audio/newspaper-foley-4-196721.mp3',
+  loop: false,
+  volume: 1.0,
+  positional: true
+  });
+  sphereEntity.object3D.add(papersoundEntity.object3D); // Attach sound to movingEntity
+
+
+
+
+  
+
+
+
+
+
   let sphereExists = true;
-
-
+  let playsound = true;
 
   const GameLoopSystem = class extends createSystem() {
     update(delta, time) {
@@ -126,11 +155,14 @@ World.create(document.getElementById('scene-container'), {
       sphereEntity.object3D.position.x < -.15 &&
       sphereEntity.object3D.position.z > -1.1 &&
       sphereEntity.object3D.position.z < -.9) {
-        cubeMesh.material.color.set('green');  
+        cubeMesh.material.color.set('green'); 
+        AudioUtils.play(musicEntity); 
         sphereEntity.destroy()
         sphereExists = false;
         }
       }
+      
+      
     }
   };
   world.registerSystem(GameLoopSystem);
