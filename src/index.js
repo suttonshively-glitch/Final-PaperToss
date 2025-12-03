@@ -61,25 +61,19 @@ World.create(document.getElementById('scene-container'), {
   const { camera } = world;
   
   world.registerSystem(PhysicsSystem).registerComponent(PhysicsBody).registerComponent(PhysicsShape);
-  
 
 
-
+  /////////////paper bin
   const bin = AssetManager.getGLTF('paperbin').scene;
-  bin.position.set(-.25, .24, -1);
+  bin.position.set(0, .24, -2);
   bin.scale.set(0.007, 0.007, 0.007);
   const binEntity = world.createTransformEntity(bin);
   binEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.TriMesh,  density: 0.02,  friction: 0.5,  restitution: 0.3 });
   binEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
  
 
-
-
-  // Create bin
-
-
-  
-  const floorGeometry = new BoxGeometry(20, 2, 20);
+  /////////////mostly invis floor
+  const floorGeometry = new BoxGeometry(60, 2, 60);
   const floorMaterial = new MeshStandardMaterial({
     color: 0xaaaaaa,       // base color (won't matter once opacity=0)
     transparent: true,     // allow transparency
@@ -93,9 +87,9 @@ World.create(document.getElementById('scene-container'), {
   floorEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
 
   
-
+  ////////////////paper ball
   const sphere = AssetManager.getGLTF('paperball').scene;
-  sphere.position.set(.25, 2, -1);
+  sphere.position.set(0, 2, -.5);
   const sphereEntity = world.createTransformEntity(sphere);
   sphereEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Sphere, dimensions: [0.05, 0, 0],  density: 0.2,  friction: 0.7,  restitution: 0.3 });
   sphereEntity.addComponent(PhysicsBody, { state: PhysicsState.Dynamic });
@@ -104,17 +98,14 @@ World.create(document.getElementById('scene-container'), {
   sphereEntity.addComponent(LocomotionEnvironment, { type: EnvironmentType.LOCAL_FLOOR });
 
 
-
-
-
   /////////////////////////adding an indicator cube
   const cubeGeometry = new BoxGeometry(0.5, 0.5, 0.5);
   const cubeMaterial = new MeshStandardMaterial({ color: 'red' });
   const cubeMesh = new Mesh(cubeGeometry, cubeMaterial);
-  cubeMesh.position.set(0, 1.5, -2);
+  cubeMesh.position.set(0, 2, -2);
   const cubeEntity = world.createTransformEntity(cubeMesh);
 
-
+  //////////////////////////////win sound
   const musicEntity = world.createEntity();
   musicEntity.addComponent(AudioSource, {
   src: '/audio/marimba-win-b-3-209679.mp3',
@@ -123,9 +114,9 @@ World.create(document.getElementById('scene-container'), {
   positional: false
   });
 
-
+  ///////////////////crumple sound
   const papersoundEntity = world.createTransformEntity();
-  papersoundEntity.object3D.position.set(.25, 2, -1);
+  papersoundEntity.object3D.position.set(0, 2, -.5);
   papersoundEntity.addComponent(AudioSource, {
   src: '/audio/newspaper-foley-4-196721.mp3',
   loop: false,
@@ -136,30 +127,23 @@ World.create(document.getElementById('scene-container'), {
 
 
 
-
-  
-
-
-
-
-
   let sphereExists = true;
-  let playsound = true;
 
   const GameLoopSystem = class extends createSystem() {
     update(delta, time) {
       if(sphereExists){
       if (
       sphereEntity.object3D.position.y < .11 &&
-      sphereEntity.object3D.position.x > -.35 &&
-      sphereEntity.object3D.position.x < -.15 &&
-      sphereEntity.object3D.position.z > -1.1 &&
-      sphereEntity.object3D.position.z < -.9) {
+      sphereEntity.object3D.position.x > -.1 &&
+      sphereEntity.object3D.position.x < .1 &&
+      sphereEntity.object3D.position.z > -2.1 &&
+      sphereEntity.object3D.position.z < -1.9) {
         cubeMesh.material.color.set('green'); 
         AudioUtils.play(musicEntity); 
         sphereEntity.destroy()
         sphereExists = false;
         }
+
       }
       
       
@@ -167,9 +151,6 @@ World.create(document.getElementById('scene-container'), {
   };
   world.registerSystem(GameLoopSystem);
   
-
-
-
 
 
   // vvvvvvvv EVERYTHING BELOW WAS ADDED TO DISPLAY A BUTTON TO ENTER VR FOR QUEST 1 DEVICES vvvvvv
