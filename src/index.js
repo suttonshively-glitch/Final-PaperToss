@@ -1,5 +1,6 @@
 import {
   AssetType,
+  createSystem,
   Mesh,
   MeshBasicMaterial,
   PlaneGeometry,
@@ -114,9 +115,11 @@ World.create(document.getElementById('scene-container'), {
 
   let sphereExists = true;
 
-  function gameLoop() {
-    //console.log(sphereEntity.object3D.position.y);
-    if(sphereExists){
+
+
+  const GameLoopSystem = class extends createSystem() {
+    update(delta, time) {
+      if(sphereExists){
       if (
       sphereEntity.object3D.position.y < .11 &&
       sphereEntity.object3D.position.x > -.35 &&
@@ -126,13 +129,11 @@ World.create(document.getElementById('scene-container'), {
         cubeMesh.material.color.set('green');  
         sphereEntity.destroy()
         sphereExists = false;
+        }
       }
     }
-    requestAnimationFrame(gameLoop);
-    }
-  gameLoop();
-
-
+  };
+  world.registerSystem(GameLoopSystem);
   
 
 
