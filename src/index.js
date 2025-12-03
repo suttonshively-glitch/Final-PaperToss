@@ -4,6 +4,8 @@ import {
   AudioSource, AudioUtils,
   Mesh,
   MeshBasicMaterial,
+  DoubleSide,
+  CanvasTexture,
   PlaneGeometry,
   BoxGeometry,
   SessionMode,
@@ -103,7 +105,59 @@ World.create(document.getElementById('scene-container'), {
   const cubeMaterial = new MeshStandardMaterial({ color: 'red' });
   const cubeMesh = new Mesh(cubeGeometry, cubeMaterial);
   cubeMesh.position.set(0, 2, -2);
-  const cubeEntity = world.createTransformEntity(cubeMesh);
+  //const cubeEntity = world.createTransformEntity(cubeMesh);
+
+  //scoreboard
+  // create a message board using a canvas texture (scoreBox)
+  const canvas = document.createElement('canvas');
+  canvas.width = 2048;
+  canvas.height = 256;
+  const ctx = canvas.getContext('2d');
+  ctx.font = 'bold 120px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'red';
+  ctx.fillText('Score: 0', canvas.width / 2, canvas.height / 2 + 16);
+  
+  const texture = new CanvasTexture(canvas);
+  const aspect = canvas.width / canvas.height;
+  const boardWidth = 2;                 // world units
+  const boardHeight = boardWidth / aspect;
+  
+  const boardMat = new MeshBasicMaterial({ 
+    map: texture, 
+    transparent: true,  
+    side: DoubleSide,});
+
+  const boardGeo = new PlaneGeometry(12, 1.5);
+  const boardMesh = new Mesh(boardGeo, boardMat);
+  const boardEntity = world.createTransformEntity(boardMesh);
+
+  boardEntity.object3D.position.set(0, 5, -20);  // in front of the user
+  boardEntity.object3D.visible = true; // start hidden
+  boardEntity.object3D.rotation.set(0, Math.PI / 4, 0);
+  boardEntity.object3D.lookAt(camera.position);
+
+
+  let score = 0;
+  function updateScoreboard() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (score > 0){
+      ctx.font = 'bold 200px sans-serif';
+      ctx.fillStyle = 'green';
+      ctx.textAlign = 'center';
+      ctx.fillText('YOU WIN!!!', canvas.width / 2, canvas.height / 2 + 50);
+    } else {
+      // Display regular score
+      ctx.font = 'bold 200px sans-serif';
+      ctx.fillStyle = 'red';
+      ctx.textAlign = 'center';
+      ctx.fillText(`Toss the ball into bin!`, canvas.width / 2, canvas.height / 2 + 40);
+    }
+      texture.needsUpdate = true;
+
+  }
+  updateScoreboard();
+
 
   //////////////////////////////win sound
   const musicEntity = world.createEntity();
@@ -148,6 +202,12 @@ World.create(document.getElementById('scene-container'), {
         AudioUtils.play(musicEntity); 
         sphereEntity.destroy()
         sphereExists = false;
+        score += 1
+        updateScoreboard();
+      
+        }
+        if(sphereEntity.object3D.position.z > 5){
+          
         }
 
       }
