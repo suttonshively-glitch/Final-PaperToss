@@ -112,20 +112,22 @@ World.create(document.getElementById('scene-container'), {
   cubeMesh.position.set(0, 1.5, -2);
   const cubeEntity = world.createTransformEntity(cubeMesh);
 
+  let sphereExists = true;
 
-  let numBounces = 0;
   function gameLoop() {
     //console.log(sphereEntity.object3D.position.y);
-    if (
-    sphereEntity.object3D.position.y < .11 &&
-    sphereEntity.object3D.position.x > -.35 &&
-    sphereEntity.object3D.position.x < -.15 &&
-    sphereEntity.object3D.position.z > -1.1 &&
-    sphereEntity.object3D.position.z < -.9) {
-      cubeMesh.material.color.set('green');  
-      sphereEntity.destroy()
+    if(sphereExists){
+      if (
+      sphereEntity.object3D.position.y < .11 &&
+      sphereEntity.object3D.position.x > -.35 &&
+      sphereEntity.object3D.position.x < -.15 &&
+      sphereEntity.object3D.position.z > -1.1 &&
+      sphereEntity.object3D.position.z < -.9) {
+        cubeMesh.material.color.set('green');  
+        sphereEntity.destroy()
+        sphereExists = false;
+      }
     }
-    
     requestAnimationFrame(gameLoop);
     }
   gameLoop();
