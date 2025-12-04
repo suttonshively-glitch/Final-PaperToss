@@ -105,7 +105,7 @@ World.create(document.getElementById('scene-container'), {
   const cubeMaterial = new MeshStandardMaterial({ color: 'red' });
   const cubeMesh = new Mesh(cubeGeometry, cubeMaterial);
   cubeMesh.position.set(0, 5, -2);
-  const cubeEntity = world.createTransformEntity(cubeMesh);
+  //const cubeEntity = world.createTransformEntity(cubeMesh);
 
   //scoreboard
   // create a message board using a canvas texture (scoreBox)
@@ -206,13 +206,13 @@ World.create(document.getElementById('scene-container'), {
         updateScoreboard();
       
         }
-        if(sphereEntity.object3D.position.z < -3 ||
-          sphereEntity.object3D.position.z > 3 ||
-          sphereEntity.object3D.position.x < -3 ||
-          sphereEntity.object3D.position.x > 3 ||
-          sphereEntity.object3D.position.y < -1
+        if(sphereEntity.object3D.position.z < -2.5 ||
+          sphereEntity.object3D.position.z > 1.5 ||
+          sphereEntity.object3D.position.x < -1 ||
+          sphereEntity.object3D.position.x > 1 ||
+          sphereEntity.object3D.position.y < -.5
         ){
-          cubeMesh.material.color.set('green');
+          //cubeMesh.material.color.set('green');
           sphereEntity.object3D.position.set(0, .5, -.5);
         }
 
